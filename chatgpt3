@@ -10,12 +10,36 @@ class ChatGPT extends LitElement {
     };
   }
 
+  constructor() {
+    super();
+    this.chatHistory = [];
+  }
+
   askQuestion(question) {
+    if (!question) {
+      throw new Error('Question cannot be empty');
+    }
+
     this.answer = chatGPT.askQuestion(question);
     this.chatHistory.push({
       question: question,
       answer: this.answer,
     });
+  }
+
+  clearChatHistory() {
+    this.chatHistory = [];
+  }
+
+  exportChatHistory() {
+    const csvData = this.chatHistory.map((item) => [item.question, item.answer]);
+    const csv = csvData.join('\n');
+
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const link = document.createElement('a');
+    link.href = window.URL.createObjectURL(blob);
+    link.download = 'chat_history.csv';
+    link.click();
   }
 
   render() {
@@ -31,6 +55,8 @@ class ChatGPT extends LitElement {
           </li>
         `)}
       </ul>
+      <button @click="clearChatHistory">Clear Chat History</button>
+      <button @click="exportChatHistory">Export Chat History</button>
     `;
   }
 }
