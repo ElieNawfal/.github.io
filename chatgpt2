@@ -1,0 +1,38 @@
+import { LitElement, html } from 'lit-element';
+import { chatGPT } from 'chat-gpt';
+
+class ChatGPT extends LitElement {
+  static get properties() {
+    return {
+      question: { type: String },
+      answer: { type: String },
+      chatHistory: { type: Array },
+    };
+  }
+
+  askQuestion(question) {
+    this.answer = chatGPT.askQuestion(question);
+    this.chatHistory.push({
+      question: question,
+      answer: this.answer,
+    });
+  }
+
+  render() {
+    return html`
+      <input type="text" placeholder="Enter your question" value="${this.question}" />
+      <button @click="askQuestion">Ask Question</button>
+      <p>The answer is: ${this.answer}</p>
+      <ul>
+        ${this.chatHistory.map((item) => html`
+          <li>
+            <strong>Question:</strong> ${item.question}
+            <strong>Answer:</strong> ${item.answer}
+          </li>
+        `)}
+      </ul>
+    `;
+  }
+}
+
+customElements.define('chat-gpt', ChatGPT);
