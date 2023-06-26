@@ -1,0 +1,24 @@
+const plugin = {
+  name: "ChatGPT",
+  description: "A plugin that lets the user ask a question and ChatGPT will answer",
+  init: function () {
+    // Create a ChatGPT instance.
+    const chatGPT = new ChatGPT({
+      apiKey: "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",
+    });
+
+    // Add a listener for the "ask" event.
+    document.addEventListener("ask", function (event) {
+      // Get the question from the event.
+      const question = event.detail.question;
+
+      // Ask ChatGPT the question.
+      const answer = chatGPT.ask(question);
+
+      // Send the answer back to the ChatGPT client.
+      event.target.dispatchEvent(new CustomEvent("answer", { detail: answer }));
+    });
+  },
+};
+
+export default plugin;
