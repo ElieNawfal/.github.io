@@ -1,0 +1,63 @@
+import { html, LitElement } from 'https://cdn.jsdelivr.net/gh/lit/dist@2/all/lit-all.min.js';
+
+export class ChatBot extends LitElement {
+  static properties = {
+    messages: { type: Array },
+    inputText: { type: String },
+  };
+
+  constructor() {
+    super();
+    this.messages = [];
+    this.inputText = '';
+  }
+
+  render() {
+    return html`
+      <div class="chat-container">
+        <div class="chat-messages">
+          ${this.messages.map(
+            (message) => html`<div class="message">${message}</div>`
+          )}
+        </div>
+        <div class="input-container">
+          <input
+            type="text"
+            id="inputText"
+            .value=${this.inputText}
+            @keydown=${this.handleKeyDown}
+          />
+          <button @click=${this.sendMessage}>Send</button>
+        </div>
+      </div>
+    `;
+  }
+
+  handleKeyDown(event) {
+    if (event.key === 'Enter') {
+      this.sendMessage();
+    }
+  }
+
+  sendMessage() {
+    const inputElement = this.shadowRoot.getElementById('inputText');
+    const messageText = inputElement.value;
+    this.addMessage('User: ' + messageText);
+
+    // Call the API or process the message using the language model
+    // Replace the following code with your API call or language processing logic
+    const responseText = 'ChatGPT: This is the response to your message.';
+    this.addMessage(responseText);
+
+    inputElement.value = '';
+  }
+
+  addMessage(message) {
+    this.messages = [...this.messages, message];
+    this.requestUpdate();
+  }
+}
+
+// Register the web component
+const elementName = 'chat-bot';
+customElements.define(elementName, ChatBot);
