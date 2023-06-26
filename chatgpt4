@@ -1,0 +1,32 @@
+import openai
+
+# Set up your OpenAI API credentials
+openai.api_key = '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'
+
+def simulate_chat(question):
+    # Define the system message and user message for the conversation
+    system_message = "You are ChatGPT, a large language model trained by OpenAI."
+    user_message = question
+
+    # Create a list of message objects for the conversation
+    messages = [
+        {'role': 'system', 'content': system_message},
+        {'role': 'user', 'content': user_message}
+    ]
+
+    # Generate a response using the ChatGPT model
+    response = openai.ChatCompletion.create(
+        model="gpt-3.5-turbo",
+        messages=messages
+    )
+
+    # Extract the reply from the response
+    reply = response['choices'][0]['message']['content']
+    
+    # Return the reply
+    return reply
+
+# Example usage
+question = input("Ask a question: ")
+answer = simulate_chat(question)
+print("ChatGPT:", answer)
